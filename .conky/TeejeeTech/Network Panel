@@ -1,0 +1,71 @@
+# **********************************************************************
+# "CPU Panel (8-core)" theme for Conky by Tony George (teejee2008@gmail.com)
+#
+# Webpage: http://teejeetech.blogspot.in/
+# **********************************************************************
+
+
+background yes
+double_buffer yes
+
+alignment middle_right
+
+border_width 1
+cpu_avg_samples 2
+default_color white
+default_outline_color white
+default_shade_color white
+draw_borders no
+draw_graph_borders yes
+draw_outline no
+draw_shades no
+
+gap_x 50
+gap_y -170
+net_avg_samples 2
+no_buffers yes
+out_to_console no
+out_to_stderr no
+extra_newline no
+
+own_window yes
+own_window_type normal
+own_window_transparent yes
+own_window_colour 000000
+own_window_argb_visual no
+own_window_argb_value 0
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+minimum_size 170 800
+stippled_borders 0
+update_interval 2.0
+uppercase no
+use_spacer none
+
+show_graph_scale no
+show_graph_range no
+
+use_xft yes
+xftalpha 0.1
+xftfont Droid Sans:size=10
+color0 white
+color1 EAEAEA
+color2 009933
+color3 grey
+
+TEXT
+${color2}Download ${color0}${alignr}${downspeedf enp5s0} KiB/s
+${downspeedgraph enp5s0 25,}
+${color2}Upload ${color0}${alignr}${upspeedf enp5s0} KiB/s 
+${upspeedgraph enp5s0 25,} 
+${color2}Local${color0}${alignr}${addrs enp5s0}
+${color2}Public${color0}${alignr}${execi 3600 wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \< -f -1}
+
+
+${voffset -16}${color2}ESTABLISHED Connections
+${color0}${hr 2}
+${color2}Inbound: ${color0}${tcp_portmon 1 32767 count}          ${color2}Outbound: ${color0}${tcp_portmon 32768 61000 count}${alignr}${color2}Total: ${color0}${tcp_portmon 1 65535 count}
+${color2}Process             ${color2}Remote IP       ${color2}L-Port  ${alignr}${color2}R-Port${color0}
+${font DejaVu Sans Mono:size=7}${texeci 15 ss -anp | grep 'ESTAB' | grep -v 'u_seq' | grep -v 'thunderbird' | grep -v 'u_str' | sed -r 's|.*(10\|127).[0-9.]+:([0-9]*)\s*([0-9.]+):([0-9]+)[^"]+"([a-zA-Z0-9-]*).*|\5 \3 \2 \4|' | awk '{printf("%-16s %-15s %5s %5s\n",$1,$2,$3,$4)}' | head -40}
+${color0}${hr 2}
+#${font DejaVu Sans Mono:size=7}${texeci 15 nethogs -c 2 -d 5 -t | grep -Ev "Adding|Ethernet|Refreshing"|tail -n+4|sed 's/unknown//g'| sed -e 's/\/[0-9]*\/[0-9.]*//g'|sed -e 's/.*\///g' | column -t}
