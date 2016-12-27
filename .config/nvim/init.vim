@@ -22,6 +22,9 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " ------------------------------------
 NeoBundle 'neomake/neomake'
 NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'vim-airline/vim-airline'
+NeoBundle 'vim-airline/vim-airline-themes'
+"NeoBundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 NeoBundle 'Valloric/YouCompleteMe', {  
      \ 'build'      : {
@@ -59,3 +62,8 @@ let g:neomake_open_list = 2
 map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 autocmd WinEnter * if &buftype ==# 'quickfix' && winnr('$') == 1 | quit | endif
+
+"Remove trailing whitespaces from python files
+autocmd BufWritePre *.py :%s/\s\+$//e
+
+let g:powerline_pycmd = "py3"
