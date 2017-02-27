@@ -1,69 +1,193 @@
-" NeoBundle Scripts-----------------------------
-if has('vim_starting')  
-  set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
-  set runtimepath+=~/.config/nvim/
+
+" vim-plug autoconfig if not already installed
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall | nested source $MYVIMRC
 endif
 
-let neobundle_readme=expand('~/.config/nvim/bundle/neobundle.vim/README.md')
+" startup for vim-plug
+call plug#begin('~/.config/nvim/plugged')
 
-if !filereadable(neobundle_readme)  
-  echo "Installing NeoBundle..."
-  echo ""
-  silent !mkdir -p ~/.config/nvim/bundle
-  silent !git clone https://github.com/Shougo/neobundle.vim ~/.config/nvim/bundle/neobundle.vim/
-  let g:not_finsh_neobundle = "yes"
-endif
+" Completions and snippets
+Plug 'jiangmiao/auto-pairs'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'zchee/deoplete-jedi', { 'for': 'python' }
+Plug 'Shougo/neco-vim', { 'for': 'vim' }
+Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
 
-call neobundle#begin(expand('$HOME/.config/nvim/bundle'))  
-NeoBundleFetch 'Shougo/neobundle.vim'
+" Helpers
+Plug 'Shougo/unite.vim'
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+Plug 'haya14busa/incsearch.vim'
+Plug 'tpope/vim-surround'
+Plug 'matchit.zip'
+Plug 'easymotion/vim-easymotion'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'kassio/neoterm'
+Plug 'edkolev/promptline.vim'
+Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
 
-" ------------------------------------
-" THIS IS WHERE YOUR PLUGINS WILL COME
-" ------------------------------------
-NeoBundle 'neomake/neomake'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'vim-airline/vim-airline'
-NeoBundle 'vim-airline/vim-airline-themes'
-"NeoBundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
+" IDE
+Plug 'joshdick/onedark.vim'
 
-NeoBundle 'Valloric/YouCompleteMe', {  
-     \ 'build'      : {
-        \ 'mac'     : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-        \ 'unix'    : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-        \ 'windows' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-        \ 'cygwin'  : './install.sh --clang-completer --system-libclang --omnisharp-completer'
-        \ }
-     \ }
+Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTree'] }
+Plug 'neomake/neomake'
+Plug 'Shougo/unite.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'gregsexton/gitv'
+Plug 'gitignore'
+Plug 'majutsushi/tagbar'
+Plug 'indentpython.vim'
+Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+Plug 'tmhedberg/SimpylFold'
+Plug 'Konfekt/FastFold'
+Plug 'airblade/vim-gitgutter'
+Plug 'miyakogi/seiya.vim'
 
-NeoBundle 'tpope/vim-surround'
+" Syntax helpers
+Plug 'pearofducks/ansible-vim', { 'for': 'ansible' }
+Plug 'freitass/todo.txt-vim', { 'for': 'todo.txt' }
+Plug 'sheerun/vim-polyglot'
 
-call neobundle#end()  
-filetype plugin indent on
+call plug#end()
 
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck  
-"End NeoBundle Scripts-------------------------
 
+
+" let g:python_host_prog = '/usr/bin/python'
+" let g:python2_host_prog = '/usr/bin/python27'
+" let g:python3_host_prog = '/usr/bin/python3.5'
+
+set clipboard+=unnamedplus
+set completeopt-=preview
+set noshowmode
+set lazyredraw
+set hidden
+set ruler
+set noswapfile
+set ignorecase
+set smartcase
+set magic
+set showmatch
+set nobackup
+set nowb
+set noerrorbells
+set expandtab
+set updatetime=250
+
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
 
 set number
-"autocmd! BufWritePost,BufEnter * Neomake
+set relativenumber
+set numberwidth=2
+set fileformat=unix
 
-"set statusline+=\ %#ErrorMsg#%{neomake#statusline#QflistStatus('qf:\ ')}
+set whichwrap+=<,>,h,l
+
+let mapleader = "\<Space>"
+
+" wildignoresettings
+" set wildignore+=.git,*.swp,*pyc,*pyo,*.png,*.jpg,*.gif,*.ai,*.jpeg,*.psd,*.jar,*.zip,*.gem,log/**,tmp/**,coverage/**,rdoc/**,output_*,*.xpi,doc/**
+
+" python special settings
+au BufNewFile,BufRead *.py set
+    \ tabstop=4
+    \ softtabstop=4
+    \ shiftwidth=4
+    \ textwidth=79
+
+nnoremap <silent> <A-right> :bn<CR>
+nnoremap <silent> <A-left> :bp<CR>
+
+" neovim terminal
+tnoremap <Esc> <C-\><C-n>
+
+" conceal markers
+if has('conceal')
+  set conceallevel=2
+endif
+
+" NERDTree things
+let NERDTreeWinPos='right'
+let NERDTreeQuitOnOpen=1
+let NERDTreeMinimalUI=1
+let NERDTreeRespectWildIgnore=1
+map <C-f> :NERDTreeToggle<CR>
+
+" incsearch.vim
+let g:incsearch#auto_nohlsearch = 1
+set hlsearch
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+map n  <Plug>(incsearch-nohl-n)
+map N  <Plug>(incsearch-nohl-N)
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
+
+" nerdtree settings
+map  <C-l> :tabn<CR>
+map  <C-h> :tabp<CR>
+map  <C-n> :tabnew<CR>
+
+" fold settings
+" let g:SimpylFold_docstring_preview = 1
+set foldlevelstart=1
 
 
-augroup vimrc_neomake
-  au!
-  autocmd BufWritePost * Neomake
-augroup END```
-
+" Neomake settings
 let g:neomake_open_list = 2
+autocmd! BufWritePost,BufEnter * Neomake
 
-map <C-n> :NERDTreeToggle<CR>
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-autocmd WinEnter * if &buftype ==# 'quickfix' && winnr('$') == 1 | quit | endif
+" TagBar
+nmap <C-t> :TagbarToggle<CR>
 
-"Remove trailing whitespaces from python files
-autocmd BufWritePre *.py :%s/\s\+$//e
+" vim-airline settings
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme = 'dark'
+let g:airline_powerline_fonts = 1
 
-let g:powerline_pycmd = "py3"
+" themes and colors
+" let NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+" set termguicolors
+let g:onedark_termcolors = 256
+set background=dark
+colorscheme onedark
+" let g:seiya_auto_enable=1
+" let g:seiya_target_groups = ['guibg']
+
+" unite vim
+let g:unite_source_grep_command = 'ack-grep'
+let g:unite_source_grep_default_opts ='-i --no-heading --no-color -k -H'
+let g:unite_source_grep_recursive_opt = ''
+
+" fzf.vim
+nnoremap <C-p> :Files<cr>
+
+" session management
+let g:session_autosave = 'no'
+
+" deoplete + neosnippet + autopairs changes
+let g:AutoPairsMapCR=0
+let g:deoplete#auto_complete_start_length = 1
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
+imap <expr><TAB> pumvisible() ? "\<C-n>" : (neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>")
+imap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+imap <expr><CR> pumvisible() ? deoplete#mappings#close_popup() : "\<CR>\<Plug>AutoPairsReturn"
+
+augroup neovim
+  autocmd!
+  autocmd FileType vimfiler set nonumber | set norelativenumber
+  autocmd Filetype * if &ft!='vimfiler' | set relativenumber | set number | endif
+  autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+  autocmd StdinReadPre * let s:std_in=1
+  autocmd BufWritePre * %s/\s\+$//e
+  autocmd BufWritePost * Neomake
+  autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
+augroup END
