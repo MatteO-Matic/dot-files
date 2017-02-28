@@ -6,13 +6,15 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall | nested source $MYVIMRC
 endif
 
+
 " startup for vim-plug
 call plug#begin('~/.config/nvim/plugged')
+" Terminal
+Plug 'mklabs/split-term.vim'
 
 " Completions and snippets
 Plug 'jiangmiao/auto-pairs'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'zchee/deoplete-jedi', { 'for': 'python' }
 Plug 'Shougo/neco-vim', { 'for': 'vim' }
 Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
 
@@ -46,6 +48,15 @@ Plug 'Konfekt/FastFold'
 Plug 'airblade/vim-gitgutter'
 Plug 'miyakogi/seiya.vim'
 
+" Python
+Plug 'zchee/deoplete-jedi', { 'for': 'python' }
+" Javascript
+Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'othree/html5.vim'
+" javascript linter
+" Plug 'eslint/eslint'
+
 " Syntax helpers
 Plug 'pearofducks/ansible-vim', { 'for': 'ansible' }
 Plug 'freitass/todo.txt-vim', { 'for': 'todo.txt' }
@@ -53,11 +64,14 @@ Plug 'sheerun/vim-polyglot'
 
 call plug#end()
 
-
+" let g:neomake_javascript_enabled_makers = ['eslint']
 
 " let g:python_host_prog = '/usr/bin/python'
 " let g:python2_host_prog = '/usr/bin/python27'
 " let g:python3_host_prog = '/usr/bin/python3.5'
+
+set splitbelow
+set splitright
 
 set clipboard+=unnamedplus
 set completeopt-=preview
@@ -137,15 +151,22 @@ map  <C-n> :tabnew<CR>
 
 " fold settings
 " let g:SimpylFold_docstring_preview = 1
-set foldlevelstart=1
+set foldlevelstart=4
 
 
 " Neomake settings
 let g:neomake_open_list = 2
-autocmd! BufWritePost,BufEnter * Neomake
+""""""""""""""""""""""""""""""""""""""""
 
 " TagBar
 nmap <C-t> :TagbarToggle<CR>
+let g:tagbar_autofocus = 1
+
+" alt+arrow to move around in split windows
+nnoremap <silent> <C-Right> <c-w>l
+nnoremap <silent> <C-Left> <c-w>h
+nnoremap <silent> <C-Up> <c-w>k
+nnoremap <silent> <C-Down> <c-w>j
 
 " vim-airline settings
 let g:airline#extensions#tabline#enabled = 1
@@ -177,6 +198,8 @@ let g:AutoPairsMapCR=0
 let g:deoplete#auto_complete_start_length = 1
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
+
+
 imap <expr><TAB> pumvisible() ? "\<C-n>" : (neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>")
 imap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 imap <expr><CR> pumvisible() ? deoplete#mappings#close_popup() : "\<CR>\<Plug>AutoPairsReturn"
