@@ -163,10 +163,10 @@ nmap <C-t> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 
 " alt+arrow to move around in split windows
-nnoremap <silent> <C-Right> <c-w>l
-nnoremap <silent> <C-Left> <c-w>h
-nnoremap <silent> <C-Up> <c-w>k
-nnoremap <silent> <C-Down> <c-w>j
+" nnoremap <silent> <C-Right> <c-w>l
+" nnoremap <silent> <C-Left> <c-w>h
+" nnoremap <silent> <C-Up> <c-w>k
+" nnoremap <silent> <C-Down> <c-w>j
 
 " vim-airline settings
 let g:airline#extensions#tabline#enabled = 1
