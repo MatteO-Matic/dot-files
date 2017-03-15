@@ -18,10 +18,13 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neco-vim', { 'for': 'vim' }
 Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
 
+" Search
+Plug 'henrik/vim-indexed-search'
+Plug 'haya14busa/incsearch.vim'
+
 " Helpers
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-Plug 'haya14busa/incsearch.vim'
 Plug 'tpope/vim-surround'
 Plug 'matchit.zip'
 Plug 'easymotion/vim-easymotion'
@@ -31,9 +34,10 @@ Plug 'kassio/neoterm'
 Plug 'edkolev/promptline.vim'
 Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
 
-" IDE
+" Theme
 Plug 'joshdick/onedark.vim'
 
+" IDE
 Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTree'] }
 Plug 'neomake/neomake'
 Plug 'Shougo/unite.vim'
@@ -70,6 +74,17 @@ call plug#end()
 " let g:python2_host_prog = '/usr/bin/python27'
 " let g:python3_host_prog = '/usr/bin/python3.5'
 
+" Ruler options
+if exists('+colorcolumn')
+    let &colorcolumn="80,".join(range(120,999),",")
+    let &colorcolumn="80"
+    highlight ColorColumn ctermbg=9 guibg=#df0000
+else
+    " fallback for Vim < v7.3
+    au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+endif
+
+
 set splitbelow
 set splitright
 
@@ -101,10 +116,10 @@ set fileformat=unix
 
 set whichwrap+=<,>,h,l
 
-let mapleader = "\<Space>"
+let mapleader = ","
 
 " wildignoresettings
-" set wildignore+=.git,*.swp,*pyc,*pyo,*.png,*.jpg,*.gif,*.ai,*.jpeg,*.psd,*.jar,*.zip,*.gem,log/**,tmp/**,coverage/**,rdoc/**,output_*,*.xpi,doc/**
+ set wildignore+=.git,*.swp,*pyc,*pyo,*.png,*.jpg,*.gif,*.ai,*.jpeg,*.psd,*.jar,*.zip,*.gem,log/**,tmp/**,coverage/**,rdoc/**,output_*,*.xpi,doc/**
 
 " python special settings
 au BufNewFile,BufRead *.py set
@@ -113,6 +128,7 @@ au BufNewFile,BufRead *.py set
     \ shiftwidth=4
     \ textwidth=79
 
+" Move left/right in buffers
 nnoremap <silent> <A-right> :bn<CR>
 nnoremap <silent> <A-left> :bp<CR>
 
@@ -145,9 +161,12 @@ map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
 
 " nerdtree settings
-map  <C-l> :tabn<CR>
-map  <C-h> :tabp<CR>
+" map  <C-l> :tabn<CR>
+" map  <C-h> :tabp<CR>
 map  <C-n> :tabnew<CR>
+nnoremap <silent> <C-l> :bn<CR>
+nnoremap <silent> <C-h> :bp<CR>
+
 
 " fold settings
 " let g:SimpylFold_docstring_preview = 1
@@ -163,10 +182,11 @@ nmap <C-t> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 
 " alt+arrow to move around in split windows
-" nnoremap <silent> <C-Right> <c-w>l
-" nnoremap <silent> <C-Left> <c-w>h
-" nnoremap <silent> <C-Up> <c-w>k
-" nnoremap <silent> <C-Down> <c-w>j
+" alt + movement
+nnoremap <silent> <A-l> <c-w>l
+nnoremap <silent> <A-h> <c-w>h
+nnoremap <silent> <A-k> <c-w>k
+nnoremap <silent> <A-j> <c-w>j
 
 " vim-airline settings
 let g:airline#extensions#tabline#enabled = 1
@@ -183,9 +203,9 @@ colorscheme onedark
 " let g:seiya_target_groups = ['guibg']
 
 " unite vim
-let g:unite_source_grep_command = 'ack-grep'
-let g:unite_source_grep_default_opts ='-i --no-heading --no-color -k -H'
-let g:unite_source_grep_recursive_opt = ''
+" let g:unite_source_grep_command = 'ack-grep'
+" let g:unite_source_grep_default_opts ='-i --no-heading --no-color -k -H'
+" let g:unite_source_grep_recursive_opt = ''
 
 " fzf.vim
 nnoremap <C-p> :Files<cr>
@@ -199,9 +219,12 @@ let g:deoplete#auto_complete_start_length = 1
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 
-
+" tab to go to next
 imap <expr><TAB> pumvisible() ? "\<C-n>" : (neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>")
+" Use tab to browse window (previous)
 imap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+
+" <CR> kinda like enter. Close deoplete; Call autopairreturn for output eg: { \n }
 imap <expr><CR> pumvisible() ? deoplete#mappings#close_popup() : "\<CR>\<Plug>AutoPairsReturn"
 
 augroup neovim
@@ -210,7 +233,19 @@ augroup neovim
   autocmd Filetype * if &ft!='vimfiler' | set relativenumber | set number | endif
   autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
   autocmd StdinReadPre * let s:std_in=1
+  " Remove whitespace if it's on the right(last) of pattern '/e'
   autocmd BufWritePre * %s/\s\+$//e
   autocmd BufWritePost * Neomake
   autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
 augroup END
+
+" leader keys
+
+" I think I'll mostly be using buffers
+" noremap <leader>q :quit<CR>
+noremap <leader>q :bd<CR>
+vnoremap <leader>s :sort<CR>
+
+" more comfy indentation
+vnoremap < <gv
+vnoremap > >gv
