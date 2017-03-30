@@ -145,7 +145,7 @@ let NERDTreeWinPos='right'
 let NERDTreeQuitOnOpen=1
 let NERDTreeMinimalUI=1
 let NERDTreeRespectWildIgnore=1
-map <C-f> :NERDTreeToggle<CR>
+map <C-n> :NERDTreeToggle<CR>
 
 " incsearch.vim
 let g:incsearch#auto_nohlsearch = 1
