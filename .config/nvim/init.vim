@@ -133,7 +133,7 @@ nnoremap <silent> <A-right> :bn<CR>
 nnoremap <silent> <A-left> :bp<CR>
 
 " neovim terminal
-tnoremap <Esc> <C-\><C-n>
+" tnoremap <Esc> <C-\><C-n>
 
 " conceal markers
 if has('conceal')
@@ -163,7 +163,7 @@ map g# <Plug>(incsearch-nohl-g#)
 " nerdtree settings
 " map  <C-l> :tabn<CR>
 " map  <C-h> :tabp<CR>
-map  <C-n> :tabnew<CR>
+" map  <C-n> :tabnew<CR>
 nnoremap <silent> <C-l> :bn<CR>
 nnoremap <silent> <C-h> :bp<CR>
 
