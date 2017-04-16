@@ -23,7 +23,6 @@ Plug 'henrik/vim-indexed-search'
 Plug 'haya14busa/incsearch.vim'
 
 " Helpers
-Plug 'Shougo/unite.vim'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'tpope/vim-surround'
 Plug 'matchit.zip'
@@ -36,6 +35,8 @@ Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
 
 " Theme
 Plug 'joshdick/onedark.vim'
+Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+Plug 'ryanoasis/vim-devicons'
 
 " IDE
 Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTree'] }
@@ -46,7 +47,6 @@ Plug 'gregsexton/gitv'
 Plug 'gitignore'
 Plug 'majutsushi/tagbar'
 Plug 'indentpython.vim'
-Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'tmhedberg/SimpylFold'
 Plug 'Konfekt/FastFold'
 Plug 'airblade/vim-gitgutter'
@@ -84,7 +84,8 @@ else
     au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 endif
 
-
+set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h11
+set encoding=utf8
 set splitbelow
 set splitright
 
