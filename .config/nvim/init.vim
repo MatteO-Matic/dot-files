@@ -25,11 +25,9 @@ Plug 'haya14busa/incsearch.vim'
 " Helpers
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'tpope/vim-surround'
-Plug 'matchit.zip'
 Plug 'easymotion/vim-easymotion'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'kassio/neoterm'
 Plug 'edkolev/promptline.vim'
 Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
 
@@ -37,23 +35,23 @@ Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
 Plug 'joshdick/onedark.vim'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
+Plug 'blueyed/vim-diminactive'
 
 " IDE
 Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTree'] }
 Plug 'neomake/neomake'
 Plug 'Shougo/unite.vim'
 Plug 'tpope/vim-fugitive'
-Plug 'gregsexton/gitv'
 Plug 'gitignore'
 Plug 'majutsushi/tagbar'
-Plug 'indentpython.vim'
 Plug 'tmhedberg/SimpylFold'
 Plug 'Konfekt/FastFold'
 Plug 'airblade/vim-gitgutter'
-Plug 'miyakogi/seiya.vim'
 
 " Python
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }
+Plug 'Vimjas/vim-python-pep8-indent', {'for': 'python'}
+
 " Javascript
 Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
@@ -84,8 +82,11 @@ else
     au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 endif
 
+filetype plugin on
+
 set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h11
 set encoding=utf8
+
 set splitbelow
 set splitright
 
@@ -123,11 +124,11 @@ let mapleader = ","
  set wildignore+=.git,*.swp,*pyc,*pyo,*.png,*.jpg,*.gif,*.ai,*.jpeg,*.psd,*.jar,*.zip,*.gem,log/**,tmp/**,coverage/**,rdoc/**,output_*,*.xpi,doc/**
 
 " python special settings
-au BufNewFile,BufRead *.py set
-    \ tabstop=4
-    \ softtabstop=4
-    \ shiftwidth=4
-    \ textwidth=79
+"au BufNewFile,BufRead *.py set
+"    \ tabstop=4
+"    \ softtabstop=4
+"    \ shiftwidth=4
+"    \ textwidth=79
 
 " Move left/right in buffers
 nnoremap <silent> <A-right> :bn<CR>
@@ -200,8 +201,7 @@ let g:airline_powerline_fonts = 1
 let g:onedark_termcolors = 256
 set background=dark
 colorscheme onedark
-" let g:seiya_auto_enable=1
-" let g:seiya_target_groups = ['guibg']
+
 
 " unite vim
 " let g:unite_source_grep_command = 'ack-grep'
