@@ -151,7 +151,7 @@ nnoremap <silent> <C-l> :bn<CR>
 nnoremap <silent> <C-h> :bp<CR>
 
 " neovim terminal
-" tnoremap <Esc> <C-\><C-n>
+tnoremap <Esc> <C-\><C-n>
 
 " conceal markers
 if has('conceal')
@@ -191,7 +191,6 @@ set foldlevelstart=4
 
 " Neomake settings
 let g:neomake_open_list = 2
-""""""""""""""""""""""""""""""""""""""""
 
 " TagBar
 nmap <C-t> :TagbarToggle<CR>
@@ -239,6 +238,7 @@ let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
 
 let g:deoplete#sources#clang#std = {'c': 'c11', 'cpp': 'c++14', 'objc': 'c11', 'objcpp': 'c++1z'}
+
 
 " neosnippet key-mappings
 " SuperTab like snippets behavior
