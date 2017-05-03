@@ -79,6 +79,12 @@ call plug#end()
 " let g:python2_host_prog = '/usr/bin/python27'
 " let g:python3_host_prog = '/usr/bin/python3.5'
 
+
+function! s:is_whitespace()
+	let col = col('.') - 1
+	return ! col || getline('.')[col - 1] =~? '\s'
+endfunction
+
 " Ruler options
 if exists('+colorcolumn')
     let &colorcolumn="80,".join(range(120,999),",")
@@ -235,20 +241,32 @@ let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
 let g:deoplete#sources#clang#std = {'c': 'c11', 'cpp': 'c++14', 'objc': 'c11', 'objcpp': 'c++1z'}
 
 " neosnippet key-mappings
-nmap <C-k>     i<Plug>(neosnippet_expand_or_jump)
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-
 " SuperTab like snippets behavior
+let g:AutoPairsMapCR=0
+imap <expr><CR>  pumvisible() ?
+\ (neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : deoplete#mappings#close_popup()."\<CR>") :
+\ "\<CR>\<Plug>AutoPairsReturn"
+
+
+imap <expr><TAB> pumvisible() ? "\<C-n>" :
+\ neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" :
+\ <SID>is_whitespace() ? "\<TAB>" : deoplete#mappings#manual_complete()
+
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+smap <expr><TAB> neosnippet#jumpable() ?
+\ "\<Plug>(neosnippet_jump)"
+\: "\<TAB>"
+
 let g:neosnippet#expand_word_boundary = 1
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+"imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 xmap <TAB> <Plug>(neosnippet_expand_target)
 
 " conceal neosnippet markers
-set conceallevel=2
-set concealcursor=niv
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
 
 " allow automatic function signature expansion
 let g:neosnippet#enable_completed_snippet=1
