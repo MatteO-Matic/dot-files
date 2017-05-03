@@ -1,4 +1,3 @@
-
 " vim-plug autoconfig if not already installed
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
@@ -6,6 +5,8 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall | nested source $MYVIMRC
 endif
 
+
+filetype plugin on
 
 " startup for vim-plug
 call plug#begin('~/.config/nvim/plugged')
@@ -47,10 +48,16 @@ Plug 'majutsushi/tagbar'
 Plug 'tmhedberg/SimpylFold'
 Plug 'Konfekt/FastFold'
 Plug 'airblade/vim-gitgutter'
+Plug 'ludovicchabant/vim-gutentags'
+
 
 " Python
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }
 Plug 'Vimjas/vim-python-pep8-indent', {'for': 'python'}
+
+" c, cpp
+Plug 'zchee/deoplete-clang', { 'for': ['cpp', 'c'] }
+Plug 'zchee/libclang-python3', { 'for': ['cpp', 'c'] }
 
 " Javascript
 Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
@@ -61,7 +68,7 @@ Plug 'othree/html5.vim'
 
 " Syntax helpers
 Plug 'pearofducks/ansible-vim', { 'for': 'ansible' }
-Plug 'freitass/todo.txt-vim', { 'for': 'todo.txt' }
+Plug 'vitalk/vim-simple-todo', { 'for': 'txt' } " Fix me
 Plug 'sheerun/vim-polyglot'
 
 call plug#end()
@@ -82,7 +89,6 @@ else
     au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 endif
 
-filetype plugin on
 
 set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h11
 set encoding=utf8
@@ -96,12 +102,13 @@ set noshowmode
 set lazyredraw
 set hidden
 set ruler
-set noswapfile
-set ignorecase
-set smartcase
+" set noswapfile
+" set nobackup
+set smartindent " Indentation depending on filetype
+set ignorecase " for search patterns
+set smartcase " don't ignore case if one capital is used
 set magic
 set showmatch
-set nobackup
 set nowb
 set noerrorbells
 set expandtab
@@ -134,19 +141,22 @@ let mapleader = ","
 nnoremap <silent> <A-right> :bn<CR>
 nnoremap <silent> <A-left> :bp<CR>
 
+nnoremap <silent> <C-l> :bn<CR>
+nnoremap <silent> <C-h> :bp<CR>
+
 " neovim terminal
 " tnoremap <Esc> <C-\><C-n>
 
 " conceal markers
 if has('conceal')
-  set conceallevel=2
+  set conceallevel=2 concealcursor=niv
 endif
 
 " NERDTree things
 let NERDTreeWinPos='right'
 let NERDTreeQuitOnOpen=1
 let NERDTreeMinimalUI=1
-let NERDTreeRespectWildIgnore=1
+let NERDTreeRespectWildIgnore=0
 map <C-n> :NERDTreeToggle<CR>
 
 " incsearch.vim
@@ -166,8 +176,6 @@ map g# <Plug>(incsearch-nohl-g#)
 " map  <C-l> :tabn<CR>
 " map  <C-h> :tabp<CR>
 " map  <C-n> :tabnew<CR>
-nnoremap <silent> <C-l> :bn<CR>
-nnoremap <silent> <C-h> :bp<CR>
 
 
 " fold settings
@@ -182,6 +190,7 @@ let g:neomake_open_list = 2
 " TagBar
 nmap <C-t> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
+let g:tagbar_autoclose = 1
 
 " alt+arrow to move around in split windows
 " alt + movement
@@ -215,18 +224,35 @@ nnoremap <C-p> :Files<cr>
 let g:session_autosave = 'no'
 
 " deoplete + neosnippet + autopairs changes
-let g:AutoPairsMapCR=0
 let g:deoplete#auto_complete_start_length = 1
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 
-" tab to go to next
-imap <expr><TAB> pumvisible() ? "\<C-n>" : (neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>")
-" Use tab to browse window (previous)
-imap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+" clang
+let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
+let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
 
-" <CR> kinda like enter. Close deoplete; Call autopairreturn for output eg: { \n }
-imap <expr><CR> pumvisible() ? deoplete#mappings#close_popup() : "\<CR>\<Plug>AutoPairsReturn"
+let g:deoplete#sources#clang#std = {'c': 'c11', 'cpp': 'c++14', 'objc': 'c11', 'objcpp': 'c++1z'}
+
+" neosnippet key-mappings
+nmap <C-k>     i<Plug>(neosnippet_expand_or_jump)
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior
+let g:neosnippet#expand_word_boundary = 1
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+xmap <TAB> <Plug>(neosnippet_expand_target)
+
+" conceal neosnippet markers
+set conceallevel=2
+set concealcursor=niv
+
+" allow automatic function signature expansion
+let g:neosnippet#enable_completed_snippet=1
+
 
 augroup neovim
   autocmd!
@@ -240,7 +266,6 @@ augroup neovim
   autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
 augroup END
 
-" leader keys
 
 " I think I'll mostly be using buffers
 " noremap <leader>q :quit<CR>
