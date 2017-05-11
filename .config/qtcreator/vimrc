@@ -1,0 +1,12 @@
+"Qt creator EX
+map <C-n> :togglesidebar<CR>
+nnoremap <C-p> :locate<CR>
+
+let mapleader = ","
+
+noremap <leader>q :q<CR>
+
+
+" more comfy indentation
+vnoremap < <gv
+vnoremap > >gv

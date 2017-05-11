@@ -162,7 +162,7 @@ endif
 let NERDTreeWinPos='right'
 let NERDTreeQuitOnOpen=1
 let NERDTreeMinimalUI=1
-let NERDTreeRespectWildIgnore=0
+let NERDTreeRespectWildIgnore=1
 map <C-n> :NERDTreeToggle<CR>
 
 " incsearch.vim
@@ -280,7 +280,7 @@ augroup neovim
   autocmd StdinReadPre * let s:std_in=1
   " Remove whitespace if it's on the right(last) of pattern '/e'
   autocmd BufWritePre * %s/\s\+$//e
-  autocmd BufWritePost * Neomake
+  " autocmd BufWritePost * Neomake
   autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
 augroup END
 
