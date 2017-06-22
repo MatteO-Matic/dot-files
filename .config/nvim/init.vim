@@ -13,6 +13,9 @@ call plug#begin('~/.config/nvim/plugged')
 " Terminal
 Plug 'mklabs/split-term.vim'
 
+" Debugging
+Plug 'vim-scripts/Conque-GDB'
+
 " Completions and snippets
 Plug 'jiangmiao/auto-pairs'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -45,8 +48,8 @@ Plug 'Shougo/unite.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'gitignore'
 Plug 'majutsushi/tagbar'
-Plug 'tmhedberg/SimpylFold'
-Plug 'Konfekt/FastFold'
+" Plug 'tmhedberg/SimpylFold'
+" Plug 'Konfekt/FastFold'
 Plug 'airblade/vim-gitgutter'
 Plug 'ludovicchabant/vim-gutentags'
 
@@ -67,13 +70,11 @@ Plug 'othree/html5.vim'
 " Plug 'eslint/eslint'
 
 " Syntax helpers
-Plug 'pearofducks/ansible-vim', { 'for': 'ansible' }
 Plug 'vitalk/vim-simple-todo', { 'for': 'txt' } " Fix me
 Plug 'sheerun/vim-polyglot'
 
 call plug#end()
 
-" let g:neomake_javascript_enabled_makers = ['eslint']
 
 " let g:python_host_prog = '/usr/bin/python'
 " let g:python2_host_prog = '/usr/bin/python27'
@@ -133,6 +134,7 @@ set whichwrap+=<,>,h,l
 
 let mapleader = ","
 
+
 " wildignoresettings
  set wildignore+=.git,*.swp,*pyc,*pyo,*.png,*.jpg,*.gif,*.ai,*.jpeg,*.psd,*.jar,*.zip,*.gem,log/**,tmp/**,coverage/**,rdoc/**,output_*,*.xpi,doc/**
 
@@ -150,7 +152,7 @@ nnoremap <silent> <A-left> :bp<CR>
 nnoremap <silent> <C-l> :bn<CR>
 nnoremap <silent> <C-h> :bp<CR>
 
-" neovim terminal
+" neovim terminal, go out from insert mode
 tnoremap <Esc> <C-\><C-n>
 
 " conceal markers
@@ -186,11 +188,15 @@ map g# <Plug>(incsearch-nohl-g#)
 
 " fold settings
 " let g:SimpylFold_docstring_preview = 1
-set foldlevelstart=4
+" set foldlevelstart=4
 
 
 " Neomake settings
 let g:neomake_open_list = 2
+" let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_cpp_enable_markers=['clang']
+let g:neomake_cpp_clang_args = ["-std=c++14", "-Wextra", "-Wall", "-fsanitize=undefined","-g"]
+
 
 " TagBar
 nmap <C-t> :TagbarToggle<CR>
@@ -280,7 +286,7 @@ augroup neovim
   autocmd StdinReadPre * let s:std_in=1
   " Remove whitespace if it's on the right(last) of pattern '/e'
   autocmd BufWritePre * %s/\s\+$//e
-  " autocmd BufWritePost * Neomake
+  " autocmd BufWritePost * Neomake " Build on write
   autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
 augroup END
 
@@ -289,6 +295,35 @@ augroup END
 " noremap <leader>q :quit<CR>
 noremap <leader>q :bd<CR>
 vnoremap <leader>s :sort<CR>
+nnoremap <Leader>b :ls<CR>:b<Space>
+
+" gdb / Conque
+nnoremap <silent> <Leader>Y :ConqueGdbCommand y<CR>
+nnoremap <silent> <Leader>N :ConqueGdbCommand n<CR>
+
+let g:ConqueTerm_Color = 2 " 1: strip color after 200 lines, 2: always with color
+let g:ConqueTerm_CloseOnEnd = 1 " close conque when program ends running
+let g:ConqueTerm_ReadUnfocused = 1      "Update unfocused buffers
+" let g:ConqueTerm_StartMessages = 0
+let g:ConqueGdb_Leader = '\'
+let g:ConqueGdb_Run = g:ConqueGdb_Leader . 'r'
+let g:ConqueGdb_Continue = g:ConqueGdb_Leader . 'c'
+let g:ConqueGdb_Next = g:ConqueGdb_Leader . 'n'
+let g:ConqueGdb_Step = g:ConqueGdb_Leader . 's'
+let g:ConqueGdb_Print = g:ConqueGdb_Leader . 'p'
+let g:ConqueGdb_ToggleBreak = g:ConqueGdb_Leader . 'b'
+let g:ConqueGdb_DeleteBreak = g:ConqueGdb_Leader . 'd'
+let g:ConqueGdb_Finish = g:ConqueGdb_Leader . 'f'
+
+
+" git vim-fugitive
+set statusline+=%{exists('g:loaded_fugitive')?fugitive#statusline():''}
+nnoremap <leader>ga :Git add %:p<CR><CR>
+nnoremap <leader>gs :Gstatus<CR>
+nnoremap <leader>gc :Gcommit -v<CR>
+nnoremap <leader>gd :Gdiff<CR>
+nnoremap <leader>gps :Git push<CR>
+nnoremap <leader>gpl :Git pull<CR>
 
 " more comfy indentation
 vnoremap < <gv
