@@ -14,7 +14,8 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'mklabs/split-term.vim'
 
 " Debugging
-Plug 'vim-scripts/Conque-GDB'
+" Plug 'vim-scripts/Conque-GDB'
+Plug 'critiqjo/lldb.nvim'
 
 " Completions and snippets
 Plug 'jiangmiao/auto-pairs'
@@ -37,6 +38,7 @@ Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
 
 " Theme
 Plug 'joshdick/onedark.vim'
+Plug 'rakr/vim-one'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
 Plug 'blueyed/vim-diminactive'
@@ -53,6 +55,8 @@ Plug 'majutsushi/tagbar'
 Plug 'airblade/vim-gitgutter'
 Plug 'ludovicchabant/vim-gutentags'
 
+" Hex editor
+Plug 'fidian/hexmode'
 
 " Python
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }
@@ -61,6 +65,8 @@ Plug 'Vimjas/vim-python-pep8-indent', {'for': 'python'}
 " c, cpp
 Plug 'zchee/deoplete-clang', { 'for': ['cpp', 'c'] }
 Plug 'zchee/libclang-python3', { 'for': ['cpp', 'c'] }
+" Plug 'ericcurtin/CurtineIncSw.vim', { 'for': ['cpp', 'c', 'h', 'hpp'] }
+Plug 'vim-scripts/a.vim'
 
 " Javascript
 Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
@@ -72,6 +78,7 @@ Plug 'othree/html5.vim'
 " Syntax helpers
 Plug 'vitalk/vim-simple-todo', { 'for': 'txt' } " Fix me
 Plug 'sheerun/vim-polyglot'
+Plug 'vimwiki/vimwiki'
 
 call plug#end()
 
@@ -97,7 +104,7 @@ else
 endif
 
 
-set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h11
+set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h12
 set encoding=utf8
 
 set splitbelow
@@ -212,7 +219,7 @@ nnoremap <silent> <A-j> <c-w>j
 
 " vim-airline settings
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme = 'dark'
+let g:airline_theme = 'onedark'
 let g:airline_powerline_fonts = 1
 
 " themes and colors
@@ -220,6 +227,7 @@ let g:airline_powerline_fonts = 1
 " set termguicolors
 let g:onedark_termcolors = 256
 set background=dark
+let g:one_allow_italics = 1
 colorscheme onedark
 
 
@@ -258,6 +266,7 @@ imap <expr><TAB> pumvisible() ? "\<C-n>" :
 \ neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" :
 \ <SID>is_whitespace() ? "\<TAB>" : deoplete#mappings#manual_complete()
 
+" Go back with shift tab or C-p
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 smap <expr><TAB> neosnippet#jumpable() ?
@@ -290,30 +299,55 @@ augroup neovim
   autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
 augroup END
 
+" wiki header colors
+let g:vimwiki_hl_headers = 1
 
 " I think I'll mostly be using buffers
 " noremap <leader>q :quit<CR>
 noremap <leader>q :bd<CR>
 vnoremap <leader>s :sort<CR>
+" List buffers
 nnoremap <Leader>b :ls<CR>:b<Space>
 
-" gdb / Conque
-nnoremap <silent> <Leader>Y :ConqueGdbCommand y<CR>
-nnoremap <silent> <Leader>N :ConqueGdbCommand n<CR>
+" Toggle cpp/h
+nnoremap <leader>t :A<CR>
 
-let g:ConqueTerm_Color = 2 " 1: strip color after 200 lines, 2: always with color
-let g:ConqueTerm_CloseOnEnd = 1 " close conque when program ends running
-let g:ConqueTerm_ReadUnfocused = 1      "Update unfocused buffers
+" gdb / Conque / neogdb
+"nnoremap <silent> <Leader>Y :ConqueGdbCommand y<CR>
+"nnoremap <silent> <Leader>N :ConqueGdbCommand n<CR>
+"nnoremap <Leader>c :ConqueGdbCommand<Space>
+"let g:ConqueTerm_Color = 2 " 1: strip color after 200 lines, 2: always with color
+"let g:ConqueTerm_CloseOnEnd = 1 " close conque when program ends running
+"let g:ConqueTerm_ReadUnfocused = 1      "Update unfocused buffers
 " let g:ConqueTerm_StartMessages = 0
-let g:ConqueGdb_Leader = '\'
-let g:ConqueGdb_Run = g:ConqueGdb_Leader . 'r'
-let g:ConqueGdb_Continue = g:ConqueGdb_Leader . 'c'
-let g:ConqueGdb_Next = g:ConqueGdb_Leader . 'n'
-let g:ConqueGdb_Step = g:ConqueGdb_Leader . 's'
-let g:ConqueGdb_Print = g:ConqueGdb_Leader . 'p'
-let g:ConqueGdb_ToggleBreak = g:ConqueGdb_Leader . 'b'
-let g:ConqueGdb_DeleteBreak = g:ConqueGdb_Leader . 'd'
-let g:ConqueGdb_Finish = g:ConqueGdb_Leader . 'f'
+"let g:ConqueGdb_Leader = '\'
+"let g:ConqueGdb_Run = g:ConqueGdb_Leader . 'r'
+"let g:ConqueGdb_Continue = g:ConqueGdb_Leader . 'c'
+"let g:ConqueGdb_Next = g:ConqueGdb_Leader . 'n'
+"let g:ConqueGdb_Step = g:ConqueGdb_Leader . 's'
+"let g:ConqueGdb_Print = g:ConqueGdb_Leader . 'p'
+"let g:ConqueGdb_ToggleBreak = g:ConqueGdb_Leader . 'b'
+"let g:ConqueGdb_DeleteBreak = g:ConqueGdb_Leader . 'd'
+"let g:ConqueGdb_Finish = g:ConqueGdb_Leader . 'f'
+"
+
+" lldb
+nmap <F2> <Plug>LLBreakSwitch
+" vmap <F2> <Plug>LLStdInSelected
+" nnoremap <F4> :LLstdin<CR>
+nnoremap <F5> :LLmode debug<CR>
+nnoremap <S-F5> :LLmode code<CR>
+nnoremap <F9> :LL continue<CR>
+nnoremap <S-F9> :LL process interrupt<CR>
+
+nnoremap <F7> :LL s<CR>
+nnoremap <F8> :LL n<CR>
+
+nnoremap <leader>dp :LL print <C-R>=expand('<cword>')<CR><CR>
+vnoremap <leader>dp :<C-U>LL print <C-R>=lldb#util#get_selection()<CR><CR><CR>
+nmap <leader>dbt :LL bt<CR>
+
+
 
 
 " git vim-fugitive
