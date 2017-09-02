@@ -308,6 +308,10 @@ augroup END
 
 " wiki header colors
 let g:vimwiki_hl_headers = 1
+let wiki = {}
+let wiki.path = '~/Documents/my_wiki/'
+let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp'}
+let g:vimwiki_list = [wiki]
 
 " I think I'll mostly be using buffers
 " noremap <leader>q :quit<CR>
