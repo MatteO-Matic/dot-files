@@ -48,7 +48,7 @@ Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTree'] }
 Plug 'neomake/neomake'
 Plug 'Shougo/unite.vim'
 Plug 'tpope/vim-fugitive'
-Plug 'gitignore'
+Plug 'vim-scripts/gitignore'
 Plug 'majutsushi/tagbar'
 " Plug 'tmhedberg/SimpylFold'
 " Plug 'Konfekt/FastFold'
@@ -248,8 +248,15 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 
 " clang
-let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
-let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
+if !empty(glob("/usr/lib64/libclang.so"))
+  let g:deoplete#sources#clang#libclang_path = '/usr/lib64/libclang.so'
+  let g:deoplete#sources#clang#clang_header = '/usr/lib64/clang'
+elseif !empty(glob("/usr/lib/libclang.so"))
+  let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
+  let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
+else
+  echo "Can't find libclang!"
+endif
 
 let g:deoplete#sources#clang#std = {'c': 'c11', 'cpp': 'c++14', 'objc': 'c11', 'objcpp': 'c++1z'}
 
