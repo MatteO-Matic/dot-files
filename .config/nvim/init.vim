@@ -190,7 +190,7 @@ let g:neomake_cpp_clangtidy_maker = {
             \ '%-G%\m%\%%(LLVM ERROR:%\|No compilation database found%\)%\@!%.%#,' .
             \ '%E%m',
             \ }
-let g:neomake_cpp_enabled_makers = ['clang', 'clangtidy']
+let g:neomake_cpp_enabled_makers = ['clangtidy']
 
 
 let g:tagbar_autofocus = 1
@@ -209,6 +209,15 @@ let g:onedark_termcolors = 256
 set background=dark
 let g:one_allow_italics = 1
 colorscheme onedark
+" set terminal title/name to filename
+let &titlestring =expand("%:t")
+if &term == "screen"
+  set t_ts=^[k
+  set t_fs=^[\
+endif
+if &term == "screen" || &term == "xterm"
+  set title
+endif
 
 
 " unite vim
