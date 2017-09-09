@@ -101,6 +101,7 @@ set splitright
 
 set clipboard+=unnamedplus
 set completeopt-=preview
+set mouse=a    "Mouse in terminal
 set noshowmode "Taken care of by airline
 set lazyredraw
 set hidden
@@ -140,9 +141,11 @@ source ~/.config/nvim/keybindings.vim
 "    \ shiftwidth=4
 "    \ textwidth=79
 " conceal markers
+
 if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
+
 
 " NERDTree things
 let NERDTreeWinPos='right'
@@ -156,7 +159,7 @@ set hlsearch
 
 " git vim-fugitive
 set statusline+=%{exists('g:loaded_fugitive')?fugitive#statusline():''}
-
+set diffopt+=vertical
 
 " fold settings
 " let g:SimpylFold_docstring_preview = 1
@@ -209,15 +212,10 @@ let g:onedark_termcolors = 256
 set background=dark
 let g:one_allow_italics = 1
 colorscheme onedark
+
 " set terminal title/name to filename
-let &titlestring =expand("%:t")
-if &term == "screen"
-  set t_ts=^[k
-  set t_fs=^[\
-endif
-if &term == "screen" || &term == "xterm"
-  set title
-endif
+set title " Allows to set the titlestring
+autocmd BufEnter * let &titlestring = "vim(" . expand("%:t") . ")"
 
 
 " unite vim
@@ -233,6 +231,7 @@ let g:session_autosave = 'no'
 let g:deoplete#auto_complete_start_length = 1
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
+
 
 " clang
 if !empty(glob("/usr/lib64/libclang.so")) " Try to find the libclang lib

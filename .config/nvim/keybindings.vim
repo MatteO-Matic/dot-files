@@ -79,11 +79,11 @@ nmap <F2> <Plug>LLBreakSwitch
 " vmap <F2> <Plug>LLStdInSelected
 " nnoremap <F4> :LLstdin<CR>
 nnoremap <F5> :LLmode debug<CR>
-nnoremap <S-F5> :LLmode code<CR>
+nnoremap <F17> :LLmode code<CR> " <S-F5>
 nnoremap <F9> :LL continue<CR>
-nnoremap <S-F9> :LL process interrupt<CR>
+nnoremap <F21> :LL process interrupt<CR> " <S-F9>
 
-nnoremap <F7> :LL s<CR>
+nnoremap <F7> :LL s<CR> " step
 nnoremap <F8> :LL n<CR>
 
 nnoremap <leader>dp :LL print <C-R>=expand('<cword>')<CR><CR>
