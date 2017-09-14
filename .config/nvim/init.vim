@@ -1,3 +1,5 @@
+" ================ Plugins ====================
+
 " vim-plug autoconfig if not already installed
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
@@ -5,17 +7,15 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall | nested source $MYVIMRC
 endif
 
-
 filetype plugin on
 
 " startup for vim-plug
 call plug#begin('~/.config/nvim/plugged')
 " Terminal
 Plug 'mklabs/split-term.vim'
-
 " Debugging
 " Plug 'vim-scripts/Conque-GDB'
-Plug 'critiqjo/lldb.nvim'
+Plug 'dbgx/lldb.nvim'
 
 " Completions and snippets
 Plug 'jiangmiao/auto-pairs'
@@ -48,7 +48,7 @@ Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTree'] }
 Plug 'neomake/neomake'
 Plug 'Shougo/unite.vim'
 Plug 'tpope/vim-fugitive'
-Plug 'gitignore'
+Plug 'vim-scripts/gitignore'
 Plug 'majutsushi/tagbar'
 " Plug 'tmhedberg/SimpylFold'
 " Plug 'Konfekt/FastFold'
@@ -68,7 +68,7 @@ Plug 'zchee/libclang-python3', { 'for': ['cpp', 'c'] }
 " Plug 'ericcurtin/CurtineIncSw.vim', { 'for': ['cpp', 'c', 'h', 'hpp'] }
 Plug 'vim-scripts/a.vim'
 
-" Javascript
+" Javascript / html
 Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'othree/html5.vim'
@@ -79,19 +79,8 @@ Plug 'othree/html5.vim'
 Plug 'vitalk/vim-simple-todo', { 'for': 'txt' } " Fix me
 Plug 'sheerun/vim-polyglot'
 Plug 'vimwiki/vimwiki'
-
 call plug#end()
 
-
-" let g:python_host_prog = '/usr/bin/python'
-" let g:python2_host_prog = '/usr/bin/python27'
-" let g:python3_host_prog = '/usr/bin/python3.5'
-
-
-function! s:is_whitespace()
-	let col = col('.') - 1
-	return ! col || getline('.')[col - 1] =~? '\s'
-endfunction
 
 " Ruler options
 if exists('+colorcolumn')
@@ -112,12 +101,11 @@ set splitright
 
 set clipboard+=unnamedplus
 set completeopt-=preview
-set noshowmode
+set mouse=a    "Mouse in terminal
+set noshowmode "Taken care of by airline
 set lazyredraw
 set hidden
 set ruler
-" set noswapfile
-" set nobackup
 set smartindent " Indentation depending on filetype
 set ignorecase " for search patterns
 set smartcase " don't ignore case if one capital is used
@@ -126,7 +114,7 @@ set showmatch
 set nowb
 set noerrorbells
 set expandtab
-set updatetime=250
+set updatetime=2000 "Dead time before writing to swap
 
 set tabstop=2
 set softtabstop=2
@@ -139,7 +127,8 @@ set fileformat=unix
 
 set whichwrap+=<,>,h,l
 
-let mapleader = ","
+
+source ~/.config/nvim/keybindings.vim
 
 
 " wildignoresettings
@@ -151,47 +140,26 @@ let mapleader = ","
 "    \ softtabstop=4
 "    \ shiftwidth=4
 "    \ textwidth=79
-
-" Move left/right in buffers
-nnoremap <silent> <A-right> :bn<CR>
-nnoremap <silent> <A-left> :bp<CR>
-
-nnoremap <silent> <C-l> :bn<CR>
-nnoremap <silent> <C-h> :bp<CR>
-
-" neovim terminal, go out from insert mode
-tnoremap <Esc> <C-\><C-n>
-
 " conceal markers
+
 if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
+
 
 " NERDTree things
 let NERDTreeWinPos='right'
 let NERDTreeQuitOnOpen=1
 let NERDTreeMinimalUI=1
 let NERDTreeRespectWildIgnore=1
-map <C-n> :NERDTreeToggle<CR>
 
 " incsearch.vim
 let g:incsearch#auto_nohlsearch = 1
 set hlsearch
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
-map n  <Plug>(incsearch-nohl-n)
-map N  <Plug>(incsearch-nohl-N)
-map *  <Plug>(incsearch-nohl-*)
-map #  <Plug>(incsearch-nohl-#)
-map g* <Plug>(incsearch-nohl-g*)
-map g# <Plug>(incsearch-nohl-g#)
 
-" nerdtree settings
-" map  <C-l> :tabn<CR>
-" map  <C-h> :tabp<CR>
-" map  <C-n> :tabnew<CR>
-
+" git vim-fugitive
+set statusline+=%{exists('g:loaded_fugitive')?fugitive#statusline():''}
+set diffopt+=vertical
 
 " fold settings
 " let g:SimpylFold_docstring_preview = 1
@@ -200,22 +168,37 @@ map g# <Plug>(incsearch-nohl-g#)
 
 " Neomake settings
 let g:neomake_open_list = 2
+
 " let g:neomake_javascript_enabled_makers = ['eslint']
-let g:neomake_cpp_enable_markers=['clang']
-let g:neomake_cpp_clang_args = ["-std=c++14", "-Wextra", "-Wall", "-fsanitize=undefined","-g"]
+
+let g:neomake_cpp_clang_maker = {
+            \ 'args': ['-fsyntax-only', '-std=c++14', '-Wall'],
+            \ 'exe': 'clang++',
+            \ 'errorformat':
+            \ '%-G%f:%s:,' .
+            \ '%f:%l:%c: %trror: %m,' .
+            \ '%f:%l:%c: %tarning: %m,' .
+            \ '%f:%l:%c: %m,'.
+            \ '%f:%l: %trror: %m,'.
+            \ '%f:%l: %tarning: %m,'.
+            \ '%f:%l: %m',
+            \ }
+let g:neomake_cpp_clangtidy_maker = {
+            \ 'exe': 'clang-tidy',
+            \ 'args': ['--checks="modernize-*,readability-*,misc-*,clang-analyzer-*"'],
+            \ 'errorformat':
+            \ '%E%f:%l:%c: fatal error: %m,' .
+            \ '%E%f:%l:%c: error: %m,' .
+            \ '%W%f:%l:%c: warning: %m,' .
+            \ '%-G%\m%\%%(LLVM ERROR:%\|No compilation database found%\)%\@!%.%#,' .
+            \ '%E%m',
+            \ }
+let g:neomake_cpp_enabled_makers = ['clangtidy']
 
 
-" TagBar
-nmap <C-t> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 let g:tagbar_autoclose = 1
 
-" alt+arrow to move around in split windows
-" alt + movement
-nnoremap <silent> <A-l> <c-w>l
-nnoremap <silent> <A-h> <c-w>h
-nnoremap <silent> <A-k> <c-w>k
-nnoremap <silent> <A-j> <c-w>j
 
 " vim-airline settings
 let g:airline#extensions#tabline#enabled = 1
@@ -230,14 +213,16 @@ set background=dark
 let g:one_allow_italics = 1
 colorscheme onedark
 
+" set terminal title/name to filename
+set title " Allows to set the titlestring
+autocmd BufEnter * let &titlestring = "vim(" . expand("%:t") . ")"
+
 
 " unite vim
 " let g:unite_source_grep_command = 'ack-grep'
 " let g:unite_source_grep_default_opts ='-i --no-heading --no-color -k -H'
 " let g:unite_source_grep_recursive_opt = ''
 
-" fzf.vim
-nnoremap <C-p> :Files<cr>
 
 " session management
 let g:session_autosave = 'no'
@@ -247,36 +232,25 @@ let g:deoplete#auto_complete_start_length = 1
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 
+
 " clang
-let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
-let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
+if !empty(glob("/usr/lib64/libclang.so")) " Try to find the libclang lib
+  let g:deoplete#sources#clang#libclang_path = '/usr/lib64/libclang.so'
+  let g:deoplete#sources#clang#clang_header = '/usr/lib64/clang'
+elseif !empty(glob("/usr/lib/libclang.so"))
+  let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
+  let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
+else
+  echo "Can't find libclang!"
+endif
 
 let g:deoplete#sources#clang#std = {'c': 'c11', 'cpp': 'c++14', 'objc': 'c11', 'objcpp': 'c++1z'}
-
 
 " neosnippet key-mappings
 " SuperTab like snippets behavior
 let g:AutoPairsMapCR=0
-imap <expr><CR>  pumvisible() ?
-\ (neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : deoplete#mappings#close_popup()."\<CR>") :
-\ "\<CR>\<Plug>AutoPairsReturn"
-
-
-imap <expr><TAB> pumvisible() ? "\<C-n>" :
-\ neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" :
-\ <SID>is_whitespace() ? "\<TAB>" : deoplete#mappings#manual_complete()
-
-" Go back with shift tab or C-p
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-smap <expr><TAB> neosnippet#jumpable() ?
-\ "\<Plug>(neosnippet_jump)"
-\: "\<TAB>"
 
 let g:neosnippet#expand_word_boundary = 1
-"imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-xmap <TAB> <Plug>(neosnippet_expand_target)
 
 " conceal neosnippet markers
 if has('conceal')
@@ -295,70 +269,14 @@ augroup neovim
   autocmd StdinReadPre * let s:std_in=1
   " Remove whitespace if it's on the right(last) of pattern '/e'
   autocmd BufWritePre * %s/\s\+$//e
-  " autocmd BufWritePost * Neomake " Build on write
+  autocmd! BufWritePost * Neomake " Build on write
   autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
 augroup END
 
 " wiki header colors
 let g:vimwiki_hl_headers = 1
+let wiki = {}
+let wiki.path = '~/Documents/my_wiki/'
+let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp'}
+let g:vimwiki_list = [wiki]
 
-" I think I'll mostly be using buffers
-" noremap <leader>q :quit<CR>
-noremap <leader>q :bd<CR>
-vnoremap <leader>s :sort<CR>
-" List buffers
-nnoremap <Leader>b :ls<CR>:b<Space>
-
-" Toggle cpp/h
-nnoremap <leader>t :A<CR>
-
-" gdb / Conque / neogdb
-"nnoremap <silent> <Leader>Y :ConqueGdbCommand y<CR>
-"nnoremap <silent> <Leader>N :ConqueGdbCommand n<CR>
-"nnoremap <Leader>c :ConqueGdbCommand<Space>
-"let g:ConqueTerm_Color = 2 " 1: strip color after 200 lines, 2: always with color
-"let g:ConqueTerm_CloseOnEnd = 1 " close conque when program ends running
-"let g:ConqueTerm_ReadUnfocused = 1      "Update unfocused buffers
-" let g:ConqueTerm_StartMessages = 0
-"let g:ConqueGdb_Leader = '\'
-"let g:ConqueGdb_Run = g:ConqueGdb_Leader . 'r'
-"let g:ConqueGdb_Continue = g:ConqueGdb_Leader . 'c'
-"let g:ConqueGdb_Next = g:ConqueGdb_Leader . 'n'
-"let g:ConqueGdb_Step = g:ConqueGdb_Leader . 's'
-"let g:ConqueGdb_Print = g:ConqueGdb_Leader . 'p'
-"let g:ConqueGdb_ToggleBreak = g:ConqueGdb_Leader . 'b'
-"let g:ConqueGdb_DeleteBreak = g:ConqueGdb_Leader . 'd'
-"let g:ConqueGdb_Finish = g:ConqueGdb_Leader . 'f'
-"
-
-" lldb
-nmap <F2> <Plug>LLBreakSwitch
-" vmap <F2> <Plug>LLStdInSelected
-" nnoremap <F4> :LLstdin<CR>
-nnoremap <F5> :LLmode debug<CR>
-nnoremap <S-F5> :LLmode code<CR>
-nnoremap <F9> :LL continue<CR>
-nnoremap <S-F9> :LL process interrupt<CR>
-
-nnoremap <F7> :LL s<CR>
-nnoremap <F8> :LL n<CR>
-
-nnoremap <leader>dp :LL print <C-R>=expand('<cword>')<CR><CR>
-vnoremap <leader>dp :<C-U>LL print <C-R>=lldb#util#get_selection()<CR><CR><CR>
-nmap <leader>dbt :LL bt<CR>
-
-
-
-
-" git vim-fugitive
-set statusline+=%{exists('g:loaded_fugitive')?fugitive#statusline():''}
-nnoremap <leader>ga :Git add %:p<CR><CR>
-nnoremap <leader>gs :Gstatus<CR>
-nnoremap <leader>gc :Gcommit -v<CR>
-nnoremap <leader>gd :Gdiff<CR>
-nnoremap <leader>gps :Git push<CR>
-nnoremap <leader>gpl :Git pull<CR>
-
-" more comfy indentation
-vnoremap < <gv
-vnoremap > >gv
