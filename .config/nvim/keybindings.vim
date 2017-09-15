@@ -98,6 +98,10 @@ nnoremap <leader>gd :Gdiff<CR>
 nnoremap <leader>gps :Git push<CR>
 nnoremap <leader>gpl :Git pull<CR>
 
+nmap <leader>gp <Plug>GitGutterPrevHunk
+nmap <leader>gn <Plug>GitGutterNextHunk
+nmap <leader>gu <Plug>GitGutterUndoHunk
+
 " more comfy indentation
 vnoremap < <gv
 vnoremap > >gv
@@ -113,12 +117,12 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 " SuperTab like snippets behavior.
 " Use <CR> to expand snippets
 imap <expr><CR>  pumvisible() ?
-\ (neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : deoplete#mappings#close_popup()."\<CR>") :
-\ "\<CR>\<Plug>AutoPairsReturn"
+      \ (neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : deoplete#mappings#close_popup()."\<CR>") :
+      \ "\<CR>\<Plug>AutoPairsReturn"
 
 imap <expr><CR>  pumvisible() ?
-\ (neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : deoplete#mappings#close_popup()) :
-\ "\<CR>\<Plug>AutoPairsReturn"
+      \ (neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : deoplete#mappings#close_popup()) :
+      \ "\<CR>\<Plug>AutoPairsReturn"
 
 " <Tab> completion:
 " 1. If popup menu is visible, select and insert next item
@@ -126,13 +130,13 @@ imap <expr><CR>  pumvisible() ?
 " 3. Otherwise, if preceding chars are whitespace, insert tab char
 " 4. Otherwise, start manual autocomplete
 imap <silent><expr><Tab> pumvisible() ? "\<Down>"
-	\ : (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)"
-	\ : (<SID>is_whitespace() ? "\<Tab>"
-	\ : deoplete#manual_complete()))
+      \ : (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)"
+      \ : (<SID>is_whitespace() ? "\<Tab>"
+      \ : deoplete#manual_complete()))
 
 smap <silent><expr><Tab> pumvisible() ? "\<Down>"
-	\ : (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)"
-	\ : (<SID>is_whitespace() ? "\<Tab>"
-	\ : deoplete#manual_complete()))
+      \ : (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)"
+      \ : (<SID>is_whitespace() ? "\<Tab>"
+      \ : deoplete#manual_complete()))
 
 inoremap <expr><S-Tab> pumvisible() ? "\<Up>" : "\<C-h>"
