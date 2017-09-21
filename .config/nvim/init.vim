@@ -15,7 +15,7 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'mklabs/split-term.vim'
 " Debugging
 " Plug 'vim-scripts/Conque-GDB'
-Plug 'critiqjo/lldb.nvim'
+Plug 'dbgx/lldb.nvim'
 
 " Completions and snippets
 Plug 'jiangmiao/auto-pairs'
