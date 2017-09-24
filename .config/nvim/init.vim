@@ -195,10 +195,9 @@ let g:neomake_cpp_clangtidy_maker = {
             \ }
 let g:neomake_cpp_enabled_makers = ['clangtidy']
 
-
+" Tagbar
 let g:tagbar_autofocus = 1
 let g:tagbar_autoclose = 1
-
 
 " vim-airline settings
 let g:airline#extensions#tabline#enabled = 1
@@ -280,3 +279,8 @@ let wiki.path = '~/Documents/my_wiki/'
 let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp'}
 let g:vimwiki_list = [wiki]
 
+
+" allow local config files
+set exrc
+" disable unsafe commands for any project local configs
+set secure
