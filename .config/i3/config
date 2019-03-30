@@ -8,6 +8,9 @@ exec_always xrandr --output DP-0 --mode 1920x1080 -r 144 --left-of DP-2 --output
 # compton
 exec --no-startup-id "compton -b --config ~/.config/compton/compton.conf"
 
+# Authentication
+exec --no-startup-id /usr/libexec/xfce-polkit
+
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 font pango:monospace 10
@@ -76,7 +79,8 @@ bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+#bindsym $mod+Shift+space floating toggle, border normal 2
+bindsym $mod+Shift+space "mark --add _; [con_mark=f] floating disable, border none, mark --add --toggle _; [con_mark=_] floating enable, border normal 2; mark --add --toggle f;"
 
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
@@ -212,4 +216,15 @@ exec_always feh --bg-scale /home/matte/Bilder/Y0IFleZ.png
 #client.background       #ffffff
 
 
-for_window [class="^.*"] border pixel 2
+#for_window [class="^.*"] border pixel 2
+default_border pixel 2
+
+## enable floating mode for all XTerm windows
+#for_window [class="XTerm"] floating enable
+
+#for_window [class="urxvt"] border pixel 1
+
+## A less useful, but rather funny example:
+## makes the window floating as soon as I change
+## directory to ~/work
+#for_window [title="x200: ~/work"] floating enable
