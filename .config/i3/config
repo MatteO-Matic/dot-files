@@ -203,7 +203,7 @@ bindsym XF86AudioPrev exec playerctl previous
 # exec cmus
 
 # Wallpaper
-exec_always feh --bg-scale /home/matte/Bilder/Y0IFleZ.png
+exec_always feh --bg-scale /home/matte/Bilder/teagirl.png
 
 # Colors
 # class                 border  backgr. text    indicator child_border
@@ -218,6 +218,19 @@ exec_always feh --bg-scale /home/matte/Bilder/Y0IFleZ.png
 
 #for_window [class="^.*"] border pixel 2
 default_border pixel 2
+
+# https://github.com/ValveSoftware/steam-for-linux/issues/1040
+for_window [class="^Steam$" title="^Friends List"] floating enable
+for_window [class="^Steam$" title="^Steam"] floating enable
+
+#for_window [class="^Steam$" title=".* - Chat"] floating enable
+#for_window [class="^Steam$" title="^Settings$"] floating enable
+#for_window [class="^Steam$" title=".* - event started"] floating enable
+#for_window [class="^Steam$" title=".* CD key"] floating enable
+#for_window [class="^Steam$" title="^Steam - Self Updater$"] floating enable
+#for_window [class="^Steam$" title="^Screenshot Uploader$"] floating enable
+#for_window [class="^Steam$" title="^Steam Guard - Computer Authorization Required$"] floating enable
+#for_window [title="^Steam Keyboard$"] floating enable
 
 ## enable floating mode for all XTerm windows
 #for_window [class="XTerm"] floating enable
