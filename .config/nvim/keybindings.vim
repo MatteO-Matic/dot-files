@@ -45,15 +45,18 @@ map <C-n> :NERDTreeToggle<CR>
 
 " I think I'll mostly be using buffers
 " noremap <leader>q :quit<CR>
-noremap <leader>q :bd<CR>
+" noremap <leader>q :bd<CR>
+" Don't close splits when quiting buffers
+noremap <leader>q :bp<bar>sp<bar>bn<bar>bd<CR>
+
 vnoremap <leader>s :sort<CR>
 " List buffers
 nnoremap <Leader>b :ls<CR>:b<Space>
 " Toggle cpp/h
 nnoremap <leader>t :A<CR>
 
-nnoremap <leader>ln :lnext<CR>
-nnoremap <leader>lp :lprev<CR>
+nnoremap <leader>cj :lnext<CR>
+nnoremap <leader>ck :lprev<CR>
 
 " gdb / Conque / neogdb
 "nnoremap <silent> <Leader>Y :ConqueGdbCommand y<CR>
@@ -75,20 +78,20 @@ nnoremap <leader>lp :lprev<CR>
 "
 
 " lldb
-nmap <F2> <Plug>LLBreakSwitch
-" vmap <F2> <Plug>LLStdInSelected
-" nnoremap <F4> :LLstdin<CR>
-nnoremap <F5> :LLmode debug<CR>
-nnoremap <F17> :LLmode code<CR> " <S-F5>
-nnoremap <F9> :LL continue<CR>
-nnoremap <F21> :LL process interrupt<CR> " <S-F9>
-
-nnoremap <F7> :LL s<CR> " step
-nnoremap <F8> :LL n<CR>
-
-nnoremap <leader>dp :LL print <C-R>=expand('<cword>')<CR><CR>
-vnoremap <leader>dp :<C-U>LL print <C-R>=lldb#util#get_selection()<CR><CR><CR>
-nmap <leader>dbt :LL bt<CR>
+"nmap <F2> <Plug>LLBreakSwitch
+"" vmap <F2> <Plug>LLStdInSelected
+"" nnoremap <F4> :LLstdin<CR>
+"nnoremap <F5> :LLmode debug<CR>
+"nnoremap <F17> :LLmode code<CR> " <S-F5>
+"nnoremap <F9> :LL continue<CR>
+"nnoremap <F21> :LL process interrupt<CR> " <S-F9>
+"
+"nnoremap <F7> :LL s<CR> " step
+"nnoremap <F8> :LL n<CR>
+"
+"nnoremap <leader>dp :LL print <C-R>=expand('<cword>')<CR><CR>
+"vnoremap <leader>dp :<C-U>LL print <C-R>=lldb#util#get_selection()<CR><CR><CR>
+"nmap <leader>dbt :LL bt<CR>
 
 " git vim-fugitive
 nnoremap <leader>ga :Git add %:p<CR><CR>
@@ -98,15 +101,30 @@ nnoremap <leader>gd :Gdiff<CR>
 nnoremap <leader>gps :Git push<CR>
 nnoremap <leader>gpl :Git pull<CR>
 
-nmap <leader>gp <Plug>GitGutterPrevHunk
-nmap <leader>gn <Plug>GitGutterNextHunk
-nmap <leader>gu <Plug>GitGutterUndoHunk
+"nmap <leader>gp <Plug>GitGutterPrevHunk
+"nmap <leader>gn <Plug>GitGutterNextHunk
+"nmap <leader>gu <Plug>GitGutterUndoHunk
+nmap <leader>gj <plug>(signify-next-hunk)
+nmap <leader>gk <plug>(signify-prev-hunk)
+nmap <leader>gJ 9999<leader>gj
+nmap <leader>gK 9999<leader>gk
 
 " more comfy indentation
 vnoremap < <gv
 vnoremap > >gv
 
 " neosnippet
+
+" Align tabular
+vnoremap <Leader>a :Tabularize /\S\+;$/l1<CR>
+nnoremap <Leader>a :Tabularize /\S\+;$/l1<CR>
+
+"nmap <Leader>a= :Tabularize /=<CR>
+"vmap <Leader>a= :Tabularize /=<CR>
+
+"nmap <Leader>a: :Tabularize /:\zs<CR>
+"vmap <Leader>a: :Tabularize /:\zs<CR>
+
 
 " Plugin key-mappings.
 " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
